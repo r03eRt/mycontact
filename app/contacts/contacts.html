@@ -1,1 +1,26 @@
-<p>This is the partial for view 1.</p>
+<div class="row" ng-controller="ContactsCtrl">
+    <div class="large-10 columns">
+        <h3>Your Contacts {{contacts.length}}</h3>
+        <table>
+            <thead>
+            <tr>
+                <th width="200px">Name</th>
+                <th width="200p">Company</th>
+                <th width="25%">Email</th>
+                <th width="25%">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><a href="#">john doe</a></td>
+                <td>Some company</td>
+                <td>something@somethign.es</td>
+                <td><a class="button tiny">Edit</a> <a class="button tiny alert">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="small-12 large-2 columns">
+        <a href="" class="button large">+</a>
+    </div>
+</div>
