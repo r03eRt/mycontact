@@ -27,6 +27,40 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
         $scope.contactShow = false;
     }
 
+
+    //controlo si muestro o no el formulario
+    $scope.showEditForm = function (contact) {
+        $scope.editFormShow = true;
+        $scope.msg = '';
+
+        /*record.id = $scope.$id;
+        record.name = $scope.name;
+        record.email = $scope.email;
+        record.company = $scope.company;
+        record.phones[0].work = $scope.work_phone;
+        record.phones[0].home = $scope.home_phone;
+        record.phones[0].mobile = $scope.mobile_phone;
+        record.address[0].street_address = $scope.street_address;
+        record.address[0].city = $scope.city;
+        record.address[0].state = $scope.state;
+        record.address[0].zipcode = $scope.zipcode;*/
+
+        //bindeo los formularios con los datos
+        $scope.id = contact.$id;
+        $scope.name = contact.name;
+        $scope.email = contact.email;
+        $scope.company = contact.company;
+        $scope.mobile_phone = contact.phones[0].work;
+        $scope.work_phone = contact.phones[0].home;
+        $scope.home_phone = contact.phones[0].mobile;
+        $scope.street_address = contact.address[0].street_address;
+        $scope.city = contact.address[0].city;
+        $scope.state = contact.address[0].state;
+        $scope.zipcode = contact.address[0].zipcode;
+
+    }
+
+
     $scope.addFormSubmit = function() {
         if ($scope.name) {
             var name = $scope.name
@@ -116,6 +150,54 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
             $scope.msg = "Contacto añadido";
         });
 
+    }
+    
+    
+    $scope.editFormSubmit = function () {
+
+        //cogemos el id del contacto
+        var id = $scope.id;
+
+        //cogemos el contact
+        var record = $scope.contacts.$getRecord(id);
+
+        
+        record.name = $scope.name;
+        record.email = $scope.email;
+        record.company = $scope.company;
+        record.phones[0].work = $scope.work_phone;
+        record.phones[0].home = $scope.home_phone;
+        record.phones[0].mobile = $scope.mobile_phone;
+        record.address[0].street_address = $scope.street_address;
+        record.address[0].city = $scope.city;
+        record.address[0].state = $scope.state;
+        record.address[0].zipcode = $scope.zipcode;
+
+        //guardamos el cotnacto
+        $scope.contacts.$save(record).then(function (ref) {
+            console.log('asd');
+        });
+            //limpiamos el formu
+            clearFields();
+
+            //no mostramos el formulario
+            $scope.editFormShow = false;
+
+            $scope.msg = "Contact Updated"
+
+    }
+    
+    
+    
+    $scope.removeContact = function (contact) {
+
+        //cogemos el id del contacto
+        var id = $scope.id;
+
+        //borramos el contacto
+        $scope.contacts.$remove(contact);
+
+        $scope.msg = "Contact removed";
     }
 
 
