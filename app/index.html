@@ -34,19 +34,29 @@
   -->
 
 
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+
   <script src="../bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="../bower_components/angular/angular.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
   <script src="../bower_components/angular-route/angular-route.js"></script>
   <!-- foundation javascript-->
-  <script src="../bower_components/foundation/js/foundation.min.js"></script>
   <!-- firebase javascript-->
+  <script src="https://cdn.firebase.com/js/simple-login/1.6.4/firebase-simple-login.js"></script>
 
-  <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-
-
-
-  <!--angularfirebase-->
-  <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
+    <!--angularfirebase-->
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyB2aJfQh_xkHjwtn13mpSzdmEP8LpJRq_4",
+        authDomain: "contactapp-2abe1.firebaseapp.com",
+        databaseURL: "https://contactapp-2abe1.firebaseio.com",
+        storageBucket: "contactapp-2abe1.appspot.com",
+        messagingSenderId: "995875743456"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script src="https://cdn.firebase.com/libs/angularfire/2.0.2/angularfire.min.js"></script>
 
   <script src="app.js"></script>
   <script src="contacts/contacts.js"></script>

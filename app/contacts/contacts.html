@@ -1,4 +1,36 @@
 <div class="row" ng-controller="ContactsCtrl">
+
+
+  <div ng-show="firebaseUser">
+     <p>Hello, {{ firebaseUser.displayName }}</p>
+     <button ng-click="auth.$signOut()">Sign Out</button>
+   </div>
+   <div ng-hide="firebaseUser">
+     <p>Welcome, please sign in.</p>
+     <button ng-click="auth.$signInWithPopup('facebook')">Sign In With Facebook</button>
+   </div>
+
+  Email: <input type="text" ng-model="email2">
+   Password: <input type="text" ng-model="password2">
+
+   <br><br>
+
+   <button ng-click="register()">Create User</button>
+
+   <br><br>
+
+   <button ng-click="deleteUser()">Remove User</button>
+
+   <p ng-if="message">Message: <strong>{{ message }}</strong></p>
+   <p ng-if="error">Error: <strong>{{ error }}</strong></p>
+
+
+
+   <button ng-click="logIn()">login</button>
+
+   <button ng-click="logInPopUp()">login Popup</button>
+
+
     <div class="large-10 columns">
         <div data-alert id="msg" class="alert-box" ng-show="!addFormShow && msg!=''" >{{msg}}</div>
         <!--SHOW CONTACT-->
@@ -17,7 +49,7 @@
                     <li><strong>{{city}}, {{state}}, {{zipcode}}</strong>:</li>
 
                 </ul>
-                
+
             </div>
         </div>
     </div>
@@ -185,6 +217,7 @@
             </div>
         </form>
     </div>
+
 
     <div class="small-12 large-2 columns">
         <a class="button large" ng-click="showAddForm()" ng-hide="addFormShow">+</a>

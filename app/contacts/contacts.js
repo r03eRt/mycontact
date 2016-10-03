@@ -5,14 +5,85 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/contacts', {
     templateUrl: 'contacts/contacts.html',
-    controller: 'ContactsCtrl'
+    controller: 'ContactsCtrl',
   });
 }])
 
-.controller('ContactsCtrl', ['$scope','$firebaseArray',function($scope,$firebaseArray) {
+.controller('ContactsCtrl', ['$scope','$firebaseArray', '$firebaseObject', '$firebaseAuth',function($scope,$firebaseArray, $firebaseObject, $firebaseAuth) {
 
     //inicializamos la conexion con la coleccion que queremos
-     var ref = new Firebase('https://mycontacts-2636b.firebaseio.com/contacts');
+    var ref = firebase.database().ref().child("contacts");
+    // download the data into a local object
+    var syncObject = $firebaseObject(ref);
+    // synchronize the object with a three-way data binding
+    // click on `index.html` above to see it used in the DOM!
+    syncObject.$bindTo($scope, "data");
+
+     var authClient = new FirebaseSimpleLogin(ref, function(error, user) {
+       if (error !== null) {
+         console.log("Error authenticating:", error);
+       } else if (user !== null) {
+         console.log("User is logged in:", user);
+       } else {
+         console.log("User is logged out");
+       }
+     });
+
+
+     $scope.register = function(){
+       $firebaseAuth().$createUserWithEmailAndPassword($scope.email2, $scope.password2)
+               .then(function(firebaseUser) {
+                 $scope.message = "User created with uid: " + firebaseUser.uid;
+               }).catch(function(error) {
+                 $scope.error = error;
+               });
+           };
+
+       $scope.deleteUser = function() {
+          $scope.message = null;
+          $scope.error = null;
+
+          // Delete the currently signed-in user
+           $firebaseAuth().$deleteUser().then(function() {
+            $scope.message = "User deleted";
+          }).catch(function(error) {
+            $scope.error = error;
+          });
+        };
+
+
+
+
+        var provider = new firebase.auth.GoogleAuthProvider();
+
+        $scope.logIn = function() {
+          firebase.auth().signInWithPopup(provider).then(function(result) {
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            // ...
+        }).catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+          });
+        };
+
+
+
+    $scope.auth = $firebaseAuth();
+
+    // any time auth state changes, add the user data to scope
+    $scope.auth.$onAuthStateChanged(function(firebaseUser) {
+      $scope.firebaseUser = firebaseUser;
+    });
+
 
     $scope.msg = '';
 
@@ -136,6 +207,7 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
             //promesa de ok
         }).then(function (ref) {
             //foreign key
+            console.log(ref);
             var id = ref.key();
             console.log('added contact with id: '+id);
 
@@ -151,8 +223,8 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
         });
 
     }
-    
-    
+
+
     $scope.editFormSubmit = function () {
 
         //cogemos el id del contacto
@@ -161,7 +233,7 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
         //cogemos el contact
         var record = $scope.contacts.$getRecord(id);
 
-        
+
         record.name = $scope.name;
         record.email = $scope.email;
         record.company = $scope.company;
@@ -186,9 +258,9 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
             $scope.msg = "Contact Updated"
 
     }
-    
-    
-    
+
+
+
     $scope.removeContact = function (contact) {
 
         //cogemos el id del contacto
@@ -217,8 +289,8 @@ angular.module('myContacts.contacts', ['ngRoute','firebase'])
 
         $scope.contactShow = true;
     }
-    
-    
+
+
     function clearFields(){
         $scope.name = '';
         $scope.email = '';
